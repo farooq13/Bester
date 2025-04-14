@@ -49,8 +49,8 @@
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/bester.git
-cd bester
+git clone https://github.com/yourusername/Bester.git
+cd Bester
 ```
 
 ## Install Dependencies
