@@ -34,7 +34,7 @@
 - Tesseract.js or Google Cloud Vision (OCR for images)
 
 ### Additional Services
-- Cloudinary or Firebase Storage (document uploads)
+- Cloudinary (document uploads)
 - Dotenv for environment variables
 
 
@@ -43,14 +43,14 @@
 ### Prerequisites
 - Node.js
 - MongoDB
-- Cloudinary/Firebase credentials
+- Cloudinary credentials
 - OpenAI API key
 
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/ai-quiz-generator.git
-cd ai-quiz-generator
+git clone https://github.com/yourusername/bester.git
+cd bester
 ```
 
 ## Install Dependencies
@@ -88,7 +88,7 @@ npm start
 -  Quiz engine with visual feedback
 - Performance review & AI suggestions
 -  Dashboard for quiz history
--  Deployment (Render / Vercel + MongoDB Atlas)
+-  Deployment (Vercel + MongoDB Atlas)
 
 
 ## Contributing
