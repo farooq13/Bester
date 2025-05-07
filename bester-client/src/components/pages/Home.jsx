@@ -11,6 +11,7 @@ import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
 } from "@heroicons/react/24/outline";
+import Upload from "./Upload";
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(true);
@@ -89,6 +90,7 @@ export default function Home() {
           <div className="flex flex-col justify-end  mt-20 max-w-4xl">
           <h2 className="text-center text-orange-700 font-bold  text-4xl md:text-5xl">
             Welcome to Bester Quiz!
+            <Upload />
           </h2>
           </div>
         </div>
