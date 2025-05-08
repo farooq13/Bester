@@ -1,18 +1,18 @@
-# 🧠 Bester (Brain Tester)
+#  Bester (Brain Tester)
 
 **An intelligent quiz application built with the MERN stack (MongoDB, Express.js, React.js, Node.js) that leverages AI to generate multiple-choice questions from uploaded documents (PDFs, images, etc.). The platform offers a personalized learning experience by allowing users to specify the number of questions, evaluate their answers, and receive AI-generated feedback and suggestions based on their performance.**
 
 
 ##  Features
- - 📄 **Document Upload**: Upload PDFs or images containing learning content.
- - 🤖 **AI-Powered Question Extraction**: Automatically extract text and generate relevant quiz questions using an AI model.
- -  🔢 **Custom Question Count**: Users decide how many questions they want in a quiz session.
-- 🎯 **Interactive Quiz Engine**:
+ -  **Document Upload**: Upload PDFs or images containing learning content.
+ -  **AI-Powered Question Extraction**: Automatically extract text and generate relevant quiz questions using an AI model.
+ -   **Custom Question Count**: Users decide how many questions they want in a quiz session.
+-  **Interactive Quiz Engine**:
   - Track correct and incorrect answers in real-time.
   - Visual cues (green/red cards) for correct and incorrect responses.
-- 🧠 **AI Feedback**: Get personalized performance reviews and suggestions powered by AI.
-- 🔐 **User Authentication**: Register and log in to save quizzes and track progress.
-- 📊 **Performance Tracking**: Store quiz scores, questions, and feedback for each user.
+-  **AI Feedback**: Get personalized performance reviews and suggestions powered by AI.
+-  **User Authentication**: Register and log in to save quizzes and track progress.
+-  **Performance Tracking**: Store quiz scores, questions, and feedback for each user.
 
 
 ## 🛠️ Tech Stack
@@ -38,7 +38,7 @@
 - Dotenv for environment variables
 
 
-## 🧪 Getting Started Locally
+##  Getting Started Locally
 
 ### Prerequisites
 - Node.js
@@ -80,7 +80,7 @@ cd client
 npm start
 ```
 
-## 📌 Roadmap
+##  Roadmap
 
 -  User authentication system
 -  File upload and OCR integration
