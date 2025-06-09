@@ -1,99 +1,115 @@
 import React from "react";
 import { useState } from "react";
-import SideBar from "./SideBar";
-import {
-  PlusIcon,
-  MicrophoneIcon,
-  ArrowUpTrayIcon,
-  MagnifyingGlassIcon,
-  PencilSquareIcon,
-  ShareIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
-} from "@heroicons/react/24/outline";
 import Upload from "./Upload";
+import Quiz from "./Quiz";
+import axios from "axios";
+import { parseQuizText } from "../../utils/parseQuizText";
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [file, setFile] = useState(null);
+  const [quiz, setQuiz] = useState(null);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [numQuestions, setNumQuestions] = useState(5);
+  const [loading, setLoading] = useState(false);
+
+  const handleFileSelect = (file) => {
+    setFile(file);
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append(
+      "prompt",
+      `Generate ${numQuestions} unique multiple-choice questions from this document. Each should have 4 options and one correct answer. Avoid repeating previous versions.`
+    );
+    formData.append("numQuestions", numQuestions);
+
+    try {
+      const res = await axios.post("http://localhost:3000/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const parseQuiz = parseQuizText(res.data.quiz);
+      console.log("Raw quiz data:", res.data.quiz);
+      console.log("Parse Quiz:", parseQuiz);
+      setQuiz(parseQuiz);
+      setQuizStarted(true);
+    } catch (err) {
+      console.log("Upload failed!", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (quizStarted) {
+    return <Quiz quizData={quiz} />;
+  }
 
   return (
-    <div className="w-screen container mx-auto relative flex flex-col">
-      {/* Left section */}
-      <div className="hidden md:block fixed top-0 right-0 left-0 bottom-0  dark:bg-gray-800  min-w-[400px] shadow-lg">
-        {/* Left section header */}
-        <header className="relative flex justify-end items-center px-3 max-w-[440px] h-12 bg-slate-100 pr-12">
-          <button onClick={() => setIsOpen(!isOpen)} className="">
-            {isOpen ? (
-              <ChevronDoubleLeftIcon className="h-6 w-6" />
-            ) : (
-              <div className="fixed top-0 left-0 right-[10px] max-w-[430px]">
-                <ChevronDoubleRightIcon className="z-30 absolute top-3 right-[1px]  h-6 w-6" />
-                <SideBar />
-              </div>
-            )}
-          </button>
-        </header>
-        {/* Chat container */}
-        <div className="container">
-          {/* User messages */}
-          <div className="block ml-12 rounded-md  mt-4 p-2 bg-slate-100 w-fit max-w-[350px] h-fit  items-end ">
-            <div>
-              <p className="text-left text-gray-900">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-                sit, odio eos velit placeat eum
-              </p>
-            </div>
-          </div>
-          {/* User messages end */}
-          {/* Bot messages */}
-          <div>
-            <div className="block mr-12 rounded-sm  mt-4 p-2  max-w-2/6 items-end w-fit max-w-[350px] h-fit">
-              <div className="">
-                <p className="text-left text-white">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-                  sit, odio eos velit placeat eum quo aut vitae modi amet ad
-                  libero facere veritatis alias similique soluta necessitatibus
-                  numquam? Accusantium!
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Bot messages end */}
-        </div>
-        {/* Chat container end */}
+    <div className="flex justify-center">
+      <div className="mt-20 max-w-4xl text-center">
+        <h2 className="text-orange-700 font-bold text-4xl md:text-5xl">
+          Stay sharp, think fast, and have fun!
+        </h2>
 
-        {/*  input box container wrapper  */}
-        <div className="">
-          {/* input box container */}
-          <div className="border-neutral-600 mt-36 bg-neutral-600 p-6 rounded-lg ">
-            <form action="" method="">
-              <input
-                placeholder="Ask anything"
-                class="resize-none rounded-md w-full p-4 outline-none"
-              />
-            </form>
-            {/* Icons */}
-            <div className=" relative flex space-x-4 text-white">
-              <PlusIcon className="mt-2 h-6 w-6 border rounded-full hover:cursor-pointer" />
-              <div className="hidden absolute font-bold bottom-8 left-[-28px] rounded-sm bg-gray-800 text-white px-4 py-1">
-                Upload
-              </div>
-            </div>
-            {/* Icons end */}
-          </div>
-          {/* input box container end */}
+        <Upload onFileSelect={handleFileSelect} />
+        {file && <p className="mt-2 text-sm text-gray-700">Selected: {file.name}</p>}
+
+        <div className="my-4">
+          <label htmlFor="numQuestions" className="mr-2 font-medium">
+            Number of Questions:
+          </label>
+          <input
+            type="number"
+            id="numQuestions"
+            value={numQuestions}
+            min={1}
+            max={20}
+            onChange={(e) => setNumQuestions(e.target.value)}
+            className="border rounded px-3 py-1 w-20"
+          />
         </div>
-      </div>
-      {/* Left section end */}
-      <div className="relative md:fixed md:left-[420px] md:right-0 w-screen h-screen bg-neutral-100 px-4">
-        <div calssName="flex flex-col items-center justify-center h-screen">
-          <div className="flex flex-col justify-end  mt-20 max-w-4xl">
-          <h2 className="text-center text-orange-700 font-bold  text-4xl md:text-5xl">
-            Welcome to Bester Quiz!
-            <Upload />
-          </h2>
-          </div>
-        </div>
+
+        <button
+          onClick={handleUpload}
+          disabled={!file || loading}
+          className={`ml-64 mr-64 whitespace-nowrap mt-6 px-12 py-3 text-lg rounded-md transition font-semibold border-2 border-gray-900 flex items-center justify-center gap-2 ${
+            file && !loading
+              ? "text-gray-900 hover:bg-gray-900 hover:text-white"
+              : "bg-gray-200 cursor-not-allowed"
+          }`}
+        >
+          {loading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 text-gray-900"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4l-3 3 3 3H4z"
+                ></path>
+              </svg>
+              Generating...
+            </>
+          ) : (
+            "Generate Quiz"
+          )}
+        </button>
       </div>
     </div>
   );

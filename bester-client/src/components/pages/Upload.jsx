@@ -1,53 +1,102 @@
 import React from "react";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
-export default function Upload() {
+export default function Upload({ onFileSelect, onUpload }) {
+  const [dragActive, setDragActive] = useState(false);
+  const inputRef = useRef(null);
   const [file, setFile] = useState(null);
-  const [questions, setQuestions] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [quiz, setQuiz] = useState(null);
 
-  const handleFileChange = (e) => setFile(e.target.files[0]);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
   const handleUpload = async () => {
-    if (!file) return alert("Please select a file to upload.");
+    if (!file) return alert("Please select a file");
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("prompt", "Generate quiz from this document");
 
-    setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:3000/upload",
-        formData
-      );
-      setQuestions(response.data.questions);
-    } catch (e) {
-      alert("Failed to generate question.lease try again.");
-    } finally {
-      setLoading(true);
+      const res = await axios.post("http://localhost:3000/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setQuiz(res.data.response);
+    } catch (err) {
+      console.log("Upload failed!", err);
+      alert("Upload failed!");
     }
   };
+
+  // const handleFileChange = (e) => setFile(e.target.files[0]);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      onFileSelect(file);
+
+      if (onUpload) onUpload(file);
+    }
+  };
+
+  const handleChanage = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      onFileSelect(file);
+
+      if (onUpload) onUpload(file);
+    }
+  };
+
   return (
     <div className="p-6">
-      <div className="relativ flex flex-col gap-4">
-        <div className="relative flex flex-col mb-12">
-          <label htmlFor="fileUplad" className="cursor-pointer inline-bloc text-[20px]">
-            Upload Document
-          </label>
+      <div className="flex flex-col justify-center items-center mt-12 gap-4">
+        <form onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
           <input
+            ref={inputRef}
+            accept=".pdf, .docx, .txt, .png, .jpg"
             type="file"
-            id="fileUpload"
-            onChange={handleFileChange}
-            className="absolute top-[5px] left-0 text-gray-900 text-[20px]"
+            onChange={handleChanage}
+            className="hidden"
           />
-        </div>
-        <button
-          onClick={handleUpload}
-          className="p-3 w-fit h-fit whitespace-nowrap text-[16px] text-gray-900 hover:bg-gray-900 hover:text-white border-2 border-gray-900 rounded-md"
-        >
-          Generate Quiz
-        </button>
+
+          <div
+            className={`p-4 ${dragActive ? "bg-gray-400" : ""}`}
+            onClick={() => inputRef.current.click()}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <p className="border border-gray-500 text-gray-500 px-4 py-16 rounded-md">
+              Drag & drop your document here or{" "}
+              <span className="text-[16px] underline font-bold text-red-500 hover:cursor-pointer">
+                browse
+              </span>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   );
