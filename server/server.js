@@ -61,14 +61,14 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     const text = result.response.text();
 
-    console.log("Generated text:", text);
+    
     res.json({ quiz: text });
   } catch (err) {
-    console.error("Upload processing failed:", err);
+  
     res.status(500).json({ error: "Failed to process upload." });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  
 });

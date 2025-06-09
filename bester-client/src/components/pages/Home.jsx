@@ -33,12 +33,11 @@ export default function Home() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const parseQuiz = parseQuizText(res.data.quiz);
-      console.log("Raw quiz data:", res.data.quiz);
-      console.log("Parse Quiz:", parseQuiz);
+    
       setQuiz(parseQuiz);
       setQuizStarted(true);
     } catch (err) {
-      console.log("Upload failed!", err);
+      
     } finally {
       setLoading(false);
     }
