@@ -15,7 +15,7 @@
 -  **Performance Tracking**: Store quiz scores, questions, and feedback for each user.
 
 
-## 🛠️ Tech Stack
+## Tech Stack
   ### Frontend
   - HTML
   - CSS
