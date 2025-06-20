@@ -1,4 +1,4 @@
-#  Bester (Brain Tester)
+#  Bester
 
 **An intelligent quiz application built with the MERN stack (MongoDB, Express.js, React.js, Node.js) that leverages AI to generate multiple-choice questions from uploaded documents (PDFs, images, etc.). The platform offers a personalized learning experience by allowing users to specify the number of questions, evaluate their answers, and receive AI-generated feedback and suggestions based on their performance.**
 
