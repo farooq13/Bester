@@ -49,7 +49,7 @@
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Bester.git
+git clone https://github.com/farooq13/Bester.git
 cd Bester
 ```
 
